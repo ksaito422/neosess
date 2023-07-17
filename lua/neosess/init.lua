@@ -1,7 +1,9 @@
 local M = {}
 
 -- デフォルトでセッションの保存先を指定するグローバル変数を定義する
-vim.g.session_path = vim.fn.expand("~/.config/nvim/sessions")
+if vim.g["session_path"] == nil then
+    vim.g.session_path = vim.fn.expand("~/.config/nvim/sessions")
+end
 
 -- ディレクトリが存在しない場合、ディレクトリを作成する
 local function dir_exists(session_path)
