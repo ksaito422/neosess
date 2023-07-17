@@ -22,6 +22,7 @@ end
 
 -- セッションを保存する
 function M.save_session(file)
+    -- TODO: vim.fn.expand()でsession_pathを安全に扱えるようにする
     local session_file_path = vim.g.session_path .. file .. ".vim"
 
     dir_exists()
@@ -37,7 +38,32 @@ function M.load_session(file)
     vim.api.nvim_command("source " .. vim.g.session_path .. file)
 end
 
--- TODO: 保存したセッションを一覧表示する
+-- 保存したセッションファイル一覧を取得する
+function M.fetch_session_file()
+    local session_path = vim.g.session_path
+
+    local function readdir()
+        print("aaa")
+        return vim.fn.globpath(session_path, "*", 1, 1)
+    end
+
+    if session_path == "" then
+        vim.api.nvim_err_writeln("session_path is empty")
+        return {}
+    end
+
+    session_path = vim.fn.expand(session_path)
+
+    local result = {}
+    for _, file in ipairs(readdir(session_path)) do
+        if vim.fn.isdirectory(session_path .. "/" .. file) == 0 then
+            table.insert(result, file)
+        end
+    end
+
+    return result
+end
+-- TODO: 保存したセッションファイルをbufferに表示する
 
 -- function M.setup()
 --     vim.api.nvim_create_user_command('CreateSession', require('nvim-session').create_session(), {})
