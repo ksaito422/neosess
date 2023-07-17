@@ -1,12 +1,15 @@
 local M = {}
 
--- デフォルトでセッションの保存先を指定するグローバル変数を定義する
-if vim.g["session_path"] == nil then
-    vim.g.session_path = vim.fn.expand("~/.config/nvim/sessions")
+function M.setup(opts)
+    -- Define default values
+    -- TODO: localで定義したい
+    session_path = opts.session_path or "~/.config/nvim/sessions"
+    -- TODO: 空文字列, nilなどの不正な値ならエラーにしたい
+    session_path = vim.fn.expand(session_path)
 end
 
 -- ディレクトリが存在しない場合、ディレクトリを作成する
-local function dir_exists(session_path)
+local function dir_exists()
     local dir_exists = vim.loop.fs_stat(session_path)
     if not dir_exists then
         os.execute("mkdir -p " .. session_path)
@@ -24,31 +27,21 @@ end
 
 -- セッションを保存する
 function M.save_session(file)
-    local session_path = vim.fn.expand(vim.g.session_path .. "/")
-    local session_file_path = session_path .. file .. ".vim"
+    local session_file_path = session_path .. "/" .. file .. ".vim"
 
-    dir_exists(session_path)
+    dir_exists()
     file_exists(session_file_path)
 
-    vim.api.nvim_command("mksession! " .. session_path .. file .. ".vim")
+    vim.api.nvim_command("mksession! " .. session_file_path)
     vim.api.nvim_command("redraw")
     print("neosess: session created")
 end
 
 -- 保存したセッションファイル一覧を取得する
 local function fetch_session_file()
-    local session_path = vim.g.session_path
-
     local function readdir()
         return vim.fn.globpath(session_path, "*", 1, 1)
     end
-
-    if session_path == "" then
-        vim.api.nvim_err_writeln("session_path is empty")
-        return {}
-    end
-
-    session_path = vim.fn.expand(session_path)
 
     local result = {}
     for _, file in ipairs(readdir(session_path)) do
