@@ -112,9 +112,4 @@ function M.display_session_files()
     show_table_in_float_win(res)
 end
 
--- function M.setup()
---     vim.api.nvim_create_user_command('CreateSession', require('nvim-session').create_session(), {})
---     vim.api.nvim_create_user_command('LoadSession', require('nvim-session').load_session(), {})
--- end
-
 return M
