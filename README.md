@@ -5,9 +5,9 @@
 Packer.nvim:
 ```
 use {
-  'ksaito422/neosess',
+  "ksaito422/neosess",
   config = function()
-    require('neosess').setup()
+    require("neosess").setup()
   end,
 }
 ```
@@ -18,9 +18,9 @@ use {
 If you want to change the location of the session file, define it as follows.
 ```
 use {
-  'ksaito422/neosess',
+  "ksaito422/neosess",
   config = function()
-    require('neosess').setup({
+    require("neosess").setup({
         session_path = "~/sessions"
       })
   end,
