@@ -3,22 +3,29 @@ local M = {}
 -- デフォルトでセッションの保存先を指定するグローバル変数を定義する
 vim.g.session_path = os.getenv("HOME") .. "/.config/nvim/sessions/"
 
--- セッションを保存する
-function M.save_session(file)
-    local session_file_path = vim.g.session_path .. file .. ".vim"
+-- ディレクトリが存在しない場合、ディレクトリを作成する
+local function dir_exists()
     local dir_exists = vim.loop.fs_stat(vim.g.session_path)
-    local file_exists = vim.loop.fs_stat(session_file_path)
-
-    -- ディレクトリが存在しない場合、ディレクトリを作成する
     if not dir_exists then
         os.execute("mkdir -p " .. vim.g.session_path)
     end
+end
 
-    -- ファイルが存在しない場合、ファイルを作成する
+-- ファイルが存在しない場合、ファイルを作成する
+local function file_exists(session_file_path)
+    local file_exists = vim.loop.fs_stat(session_file_path)
     if not file_exists then
         local f = assert(io.open(session_file_path, "w"))
         f:close()
     end
+end
+
+-- セッションを保存する
+function M.save_session(file)
+    local session_file_path = vim.g.session_path .. file .. ".vim"
+
+    dir_exists()
+    file_exists(session_file_path)
 
     vim.api.nvim_command("mksession! " .. session_file_path)
     vim.api.nvim_command("redraw")
