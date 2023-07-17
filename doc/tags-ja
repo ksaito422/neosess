@@ -1,0 +1,14 @@
+!_TAG_FILE_ENCODING	utf-8	//
+:LoadSession	neosess.jax	/*:LoadSession*
+:SaveSession	neosess.jax	/*:SaveSession*
+commands	neosess.jax	/*commands*
+neosess	neosess.jax	/*neosess*
+neosess-changelog	neosess.jax	/*neosess-changelog*
+neosess-contents	neosess.jax	/*neosess-contents*
+neosess-interface	neosess.jax	/*neosess-interface*
+neosess-introduction	neosess.jax	/*neosess-introduction*
+neosess-todo	neosess.jax	/*neosess-todo*
+neosess-usage	neosess.jax	/*neosess-usage*
+neosess.txt	neosess.jax	/*neosess.txt*
+neosess_variables	neosess.jax	/*neosess_variables*
+session_path	neosess.jax	/*session_path*
