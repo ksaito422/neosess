@@ -33,11 +33,6 @@ function M.save_session(file)
     print("session.vim: created")
 end
 
--- 保存したセッションを読み込む
-function M.load_session(file)
-    vim.api.nvim_command("source " .. vim.g.session_path .. file)
-end
-
 -- 保存したセッションファイル一覧を取得する
 local function fetch_session_file()
     local session_path = vim.g.session_path
@@ -88,12 +83,25 @@ end
 
 -- session filesをfloat windowに表示する
 local function show_table_in_float_win(t)
-    local buf, _ = create_float_win()
+    function process_line(line, win_id)
+        load_session(line, win_id)
+    end
+
+    local buf, win_id = create_float_win()
     local lines = {}
     for k, v in pairs(t) do
         table.insert(lines, tostring(v))
     end
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    -- TODO: local function process_lineを呼び出したい
+    vim.api.nvim_buf_set_keymap(buf, "n", "<CR>", string.format(":lua process_line(vim.api.nvim_get_current_line(), %d)<CR>", win_id), {noremap = true, silent = true})
+    -- vim.api.nvim_buf_set_current_win(win_id)
+end
+
+-- 保存したセッションを読み込む
+function load_session(file, win_id)
+    vim.api.nvim_win_close(win_id, true)
+    vim.api.nvim_command("source " .. file)
 end
 
 -- session fileを一覧表示する
