@@ -7,7 +7,7 @@ Packer.nvim:
 use {
   "ksaito422/neosess",
   config = function()
-    require("neosess").setup()
+    require("neosess").setup({})
   end,
 }
 ```
