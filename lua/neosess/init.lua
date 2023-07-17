@@ -39,11 +39,10 @@ function M.load_session(file)
 end
 
 -- 保存したセッションファイル一覧を取得する
-function M.fetch_session_file()
+local function fetch_session_file()
     local session_path = vim.g.session_path
 
     local function readdir()
-        print("aaa")
         return vim.fn.globpath(session_path, "*", 1, 1)
     end
 
@@ -63,7 +62,45 @@ function M.fetch_session_file()
 
     return result
 end
--- TODO: 保存したセッションファイルをbufferに表示する
+
+-- float windowを定義する
+local function create_float_win()
+    -- float windowのパラメータを定義します
+    local win_height = 0.4 * vim.o.lines -- 高さは画面の40%
+    local win_width = 0.4 * vim.o.columns -- 幅は画面の40%
+
+    local row = math.ceil((vim.o.lines - win_height) / 2 - 1)
+    local col = math.ceil((vim.o.columns - win_width) / 2)
+
+    local buf = vim.api.nvim_create_buf(false, true)
+
+    -- float windowを作成する
+    local win_id = vim.api.nvim_open_win(buf, true, {
+        relative = 'editor',
+        row = row,
+        col = col,
+        width = math.ceil(win_width),
+        height = math.ceil(win_height),
+    })
+
+    return buf, win_id
+end
+
+-- session filesをfloat windowに表示する
+local function show_table_in_float_win(t)
+    local buf, _ = create_float_win()
+    local lines = {}
+    for k, v in pairs(t) do
+        table.insert(lines, tostring(v))
+    end
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+end
+
+-- session fileを一覧表示する
+function M.display_session_files()
+    local res = fetch_session_file()
+    show_table_in_float_win(res)
+end
 
 -- function M.setup()
 --     vim.api.nvim_create_user_command('CreateSession', require('nvim-session').create_session(), {})
