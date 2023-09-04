@@ -1,6 +1,6 @@
 !_TAG_FILE_ENCODING	utf-8	//
-:LoadSession	neosess.jax	/*:LoadSession*
-:SaveSession	neosess.jax	/*:SaveSession*
+:NeosessList	neosess.jax	/*:NeosessList*
+:NeosessSave	neosess.jax	/*:NeosessSave*
 commands	neosess.jax	/*commands*
 neosess	neosess.jax	/*neosess*
 neosess-changelog	neosess.jax	/*neosess-changelog*
