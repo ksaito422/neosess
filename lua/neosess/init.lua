@@ -78,8 +78,12 @@ end
 
 -- session filesをfloat windowに表示する
 local function show_table_in_float_win(t)
-    function process_line(line, win_id)
-        load_session(line, win_id)
+    function process_line(line, win_id, mode)
+        if mode == 'load' then
+            load_session(line, win_id)
+        elseif 'delete' then
+            delete_session(line, win_id)
+        end
     end
 
     local buf, win_id = create_float_win()
@@ -93,7 +97,14 @@ local function show_table_in_float_win(t)
         buf,
         'n',
         '<CR>',
-        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d)<CR>', win_id),
+        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "load")<CR>', win_id),
+        { noremap = true, silent = true }
+    )
+    vim.api.nvim_buf_set_keymap(
+        buf,
+        'n',
+        'D',
+        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "delete")<CR>', win_id),
         { noremap = true, silent = true }
     )
     -- vim.api.nvim_buf_set_current_win(win_id)
@@ -103,6 +114,12 @@ end
 function load_session(file, win_id)
     vim.api.nvim_win_close(win_id, true)
     vim.api.nvim_command('source ' .. file)
+end
+
+-- 保存してあるセッションを削除する
+function delete_session(file, win_id)
+    vim.api.nvim_win_close(win_id, true)
+    os.remove(file)
 end
 
 -- session fileを一覧表示する
