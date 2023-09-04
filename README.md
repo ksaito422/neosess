@@ -2,6 +2,18 @@
 
 ## ✨Installation
 
+Lazy.nvim:
+```
+  {
+    'ksaito422/neosess',
+    config = function()
+      require('neosess').setup({
+        session_path = '~/sessions'
+      })
+    end,
+  }
+```
+
 Packer.nvim:
 ```
 use {
