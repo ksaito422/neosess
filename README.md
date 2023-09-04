@@ -29,8 +29,8 @@ use {
 
 ## ⚡️Commands
 
-- `SaveSession <session name>` Save the session
-- `LoadSession` View saved sessions and expand selected sessions to buffer
+- `NeosessSave <session name>` Save the session
+- `NeosessList` View saved sessions and expand selected sessions to buffer
 
 ## ⛓️Compatibility
 

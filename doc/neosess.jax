@@ -62,10 +62,10 @@ session_path                                    *session_path*
 ------------------------------------------------------------------------------
 コマンド                                        *commands*
 
-:SaveSession                                    *:SaveSession*
+:NeosessSave                                    *:NeosessSave*
     セッションを{name}で保存します。
 
-:LoadSession                                    *:LoadSession*
+:NeosessList                                    *:NeosessList*
     保存したセッションファイルを開きます。
     Enterでカーソル上にあるセッションファイルをロードします。
 ------------------------------------------------------------------------------
