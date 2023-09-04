@@ -34,7 +34,7 @@ function M.save_session(file)
 
     vim.api.nvim_command('mksession! ' .. session_file_path)
     vim.api.nvim_command('redraw')
-    print('neosess: session created')
+    vim.api.nvim_echo({{ 'neosess: session created.' }}, true, {})
 end
 
 -- 保存したセッションファイル一覧を取得する
@@ -120,6 +120,7 @@ end
 function delete_session(file, win_id)
     vim.api.nvim_win_close(win_id, true)
     os.remove(file)
+    vim.api.nvim_echo({{ 'neosess: ' .. file .. ' has been deleted.' }}, true, {})
 end
 
 -- session fileを一覧表示する
