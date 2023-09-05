@@ -65,22 +65,22 @@ local function show_table_in_float_win(t)
         end
     end
 
-    local buf, win_id = ui.create_float_win()
+    local bufnr, win_id = ui.create_float_win()
     local lines = {}
     for k, v in pairs(t) do
         table.insert(lines, tostring(v))
     end
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
     -- TODO: local function process_lineを呼び出したい
     vim.api.nvim_buf_set_keymap(
-        buf,
+        bufnr,
         'n',
         '<CR>',
         string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "load")<CR>', win_id),
         { noremap = true, silent = true }
     )
     vim.api.nvim_buf_set_keymap(
-        buf,
+        bufnr,
         'n',
         'D',
         string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "delete")<CR>', win_id),

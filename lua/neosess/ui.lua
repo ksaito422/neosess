@@ -1,26 +1,39 @@
 local M = {}
 
--- float windowを定義する
-function M.create_float_win()
-    -- float windowのパラメータを定義します
+local function create_window()
     local win_height = 0.4 * vim.o.lines -- 高さは画面の40%
     local win_width = 0.4 * vim.o.columns -- 幅は画面の40%
 
-    local row = math.ceil((vim.o.lines - win_height) / 2 - 1)
-    local col = math.ceil((vim.o.columns - win_width) / 2)
-
-    local buf = vim.api.nvim_create_buf(false, true)
-
-    -- float windowを作成する
-    local win_id = vim.api.nvim_open_win(buf, true, {
+    local win_config = {
         relative = 'editor',
-        row = row,
-        col = col,
-        width = math.ceil(win_width),
+        row = math.ceil((vim.o.lines - win_height) / 2 - 1),
+        col = math.ceil((vim.o.columns - win_width) / 2),
         height = math.ceil(win_height),
+        width = math.ceil(win_width),
+        title = 'Sessions',
+        border = 'single',
+        title_pos = 'center',
+    }
+
+    local bufnr = vim.api.nvim_create_buf(false, true)
+
+    return bufnr, win_config
+end
+
+function M.create_float_win()
+    local bufnr, win_config = create_window()
+    local win_id = vim.api.nvim_open_win(bufnr, true, {
+        relative = win_config.relative,
+        row = win_config.row,
+        col = win_config.col,
+        height = win_config.height,
+        width = win_config.width,
+        title = win_config.title,
+        border = win_config.border,
+        title_pos = win_config.title_pos,
     })
 
-    return buf, win_id
+    return bufnr, win_id
 end
 
 return M
