@@ -20,6 +20,30 @@ local function create_window()
     return bufnr, win_config
 end
 
+local function set_keybinds(bufnr, win_id)
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        'n',
+        'q',
+        string.format(':q<CR>', win_id),
+        { noremap = true, silent = true }
+    )
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        'n',
+        '<CR>',
+        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "load")<CR>', win_id),
+        { noremap = true, silent = true }
+    )
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        'n',
+        'D',
+        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "delete")<CR>', win_id),
+        { noremap = true, silent = true }
+    )
+end
+
 function M.create_float_win()
     local bufnr, win_config = create_window()
     local win_id = vim.api.nvim_open_win(bufnr, true, {
@@ -32,6 +56,8 @@ function M.create_float_win()
         border = win_config.border,
         title_pos = win_config.title_pos,
     })
+
+    set_keybinds(bufnr, win_id)
 
     return bufnr, win_id
 end
