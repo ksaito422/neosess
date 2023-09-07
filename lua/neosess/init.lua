@@ -1,4 +1,5 @@
 local ui = require('neosess.ui')
+local session = require('neosess.session')
 
 local M = {}
 
@@ -36,7 +37,7 @@ function M.save_session(file)
 
     vim.api.nvim_command('mksession! ' .. session_file_path)
     vim.api.nvim_command('redraw')
-    vim.api.nvim_echo({{ 'neosess: session created.' }}, true, {})
+    vim.api.nvim_echo({ { 'neosess: session created.' } }, true, {})
 end
 
 -- 保存したセッションファイル一覧を取得する
@@ -57,14 +58,6 @@ end
 
 -- session filesをfloat windowに表示する
 local function show_table_in_float_win(t)
-    function process_line(line, win_id, mode)
-        if mode == 'load' then
-            load_session(line, win_id)
-        elseif 'delete' then
-            delete_session(line, win_id)
-        end
-    end
-
     local bufnr = ui.create_float_win()
     local lines = {}
     for k, v in pairs(t) do
@@ -73,19 +66,6 @@ local function show_table_in_float_win(t)
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
     -- TODO: local function process_lineを呼び出したい
     -- vim.api.nvim_buf_set_current_win(win_id)
-end
-
--- 保存したセッションを読み込む
-function load_session(file, win_id)
-    vim.api.nvim_win_close(win_id, true)
-    vim.api.nvim_command('source ' .. file)
-end
-
--- 保存してあるセッションを削除する
-function delete_session(file, win_id)
-    vim.api.nvim_win_close(win_id, true)
-    os.remove(file)
-    vim.api.nvim_echo({{ 'neosess: ' .. file .. ' has been deleted.' }}, true, {})
 end
 
 -- session fileを一覧表示する

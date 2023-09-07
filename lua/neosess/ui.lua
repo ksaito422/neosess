@@ -32,14 +32,14 @@ local function set_keybinds(bufnr, win_id)
         bufnr,
         'n',
         '<CR>',
-        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "load")<CR>', win_id),
+        string.format(':lua ProcessLine(vim.api.nvim_get_current_line(), %d, "load")<CR>', win_id),
         { noremap = true, silent = true }
     )
     vim.api.nvim_buf_set_keymap(
         bufnr,
         'n',
         'D',
-        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "delete")<CR>', win_id),
+        string.format(':lua ProcessLine(vim.api.nvim_get_current_line(), %d, "delete")<CR>', win_id),
         { noremap = true, silent = true }
     )
 end
