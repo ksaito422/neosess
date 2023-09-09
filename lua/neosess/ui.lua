@@ -1,25 +1,5 @@
 local M = {}
 
-local function create_window()
-    local win_height = 0.4 * vim.o.lines -- 高さは画面の40%
-    local win_width = 0.4 * vim.o.columns -- 幅は画面の40%
-
-    local win_config = {
-        relative = 'editor',
-        row = math.ceil((vim.o.lines - win_height) / 2 - 1),
-        col = math.ceil((vim.o.columns - win_width) / 2),
-        height = math.ceil(win_height),
-        width = math.ceil(win_width),
-        title = 'Sessions',
-        border = 'single',
-        title_pos = 'center',
-    }
-
-    local bufnr = vim.api.nvim_create_buf(false, true)
-
-    return bufnr, win_config
-end
-
 local function set_keybinds(bufnr, win_id)
     vim.api.nvim_buf_set_keymap(
         bufnr,
@@ -42,6 +22,46 @@ local function set_keybinds(bufnr, win_id)
         string.format(':lua ProcessLine(vim.api.nvim_get_current_line(), %d, "delete")<CR>', win_id),
         { noremap = true, silent = true }
     )
+end
+
+local function load_session(file, win_id)
+    vim.api.nvim_win_close(win_id, true)
+    vim.api.nvim_command('source ' .. file)
+end
+
+local function delete_session(file, win_id)
+    vim.api.nvim_win_close(win_id, true)
+    os.remove(file)
+    vim.api.nvim_echo({ { 'neosess: ' .. file .. ' has been deleted.' } }, true, {})
+end
+
+-- Define actions that can be operated in the float windows
+function ProcessLine(line, win_id, mode)
+    if mode == 'load' then
+        load_session(line, win_id)
+    elseif 'delete' then
+        delete_session(line, win_id)
+    end
+end
+
+local function create_window()
+    local win_height = 0.4 * vim.o.lines -- 高さは画面の40%
+    local win_width = 0.4 * vim.o.columns -- 幅は画面の40%
+
+    local win_config = {
+        relative = 'editor',
+        row = math.ceil((vim.o.lines - win_height) / 2 - 1),
+        col = math.ceil((vim.o.columns - win_width) / 2),
+        height = math.ceil(win_height),
+        width = math.ceil(win_width),
+        title = 'Sessions',
+        border = 'single',
+        title_pos = 'center',
+    }
+
+    local bufnr = vim.api.nvim_create_buf(false, true)
+
+    return bufnr, win_config
 end
 
 function M.create_float_win()
