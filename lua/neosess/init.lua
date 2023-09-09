@@ -14,12 +14,12 @@ end
 -- 保存したセッションファイル一覧を取得する
 local function fetch_session_file()
     local function readdir()
-        return vim.fn.globpath(session_path, '*', 1, 1)
+        return vim.fn.globpath(SessionPath, '*', 1, 1)
     end
 
     local result = {}
-    for _, file in ipairs(readdir(session_path)) do
-        if vim.fn.isdirectory(session_path .. '/' .. file) == 0 then
+    for _, file in ipairs(readdir(SessionPath)) do
+        if vim.fn.isdirectory(SessionPath .. '/' .. file) == 0 then
             table.insert(result, file)
         end
     end
