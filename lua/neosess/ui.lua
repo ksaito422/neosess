@@ -1,5 +1,49 @@
 local M = {}
 
+local function set_keybinds(bufnr, win_id)
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        'n',
+        'q',
+        string.format(':q<CR>', win_id),
+        { noremap = true, silent = true }
+    )
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        'n',
+        '<CR>',
+        string.format(':lua ProcessLine(vim.api.nvim_get_current_line(), %d, "load")<CR>', win_id),
+        { noremap = true, silent = true }
+    )
+    vim.api.nvim_buf_set_keymap(
+        bufnr,
+        'n',
+        'D',
+        string.format(':lua ProcessLine(vim.api.nvim_get_current_line(), %d, "delete")<CR>', win_id),
+        { noremap = true, silent = true }
+    )
+end
+
+local function load_session(file, win_id)
+    vim.api.nvim_win_close(win_id, true)
+    vim.api.nvim_command('source ' .. file)
+end
+
+local function delete_session(file, win_id)
+    vim.api.nvim_win_close(win_id, true)
+    os.remove(file)
+    vim.api.nvim_echo({ { 'neosess: ' .. file .. ' has been deleted.' } }, true, {})
+end
+
+-- Define actions that can be operated in the float windows
+function ProcessLine(line, win_id, mode)
+    if mode == 'load' then
+        load_session(line, win_id)
+    elseif 'delete' then
+        delete_session(line, win_id)
+    end
+end
+
 local function create_window()
     local win_height = 0.4 * vim.o.lines -- 高さは画面の40%
     local win_width = 0.4 * vim.o.columns -- 幅は画面の40%
@@ -18,30 +62,6 @@ local function create_window()
     local bufnr = vim.api.nvim_create_buf(false, true)
 
     return bufnr, win_config
-end
-
-local function set_keybinds(bufnr, win_id)
-    vim.api.nvim_buf_set_keymap(
-        bufnr,
-        'n',
-        'q',
-        string.format(':q<CR>', win_id),
-        { noremap = true, silent = true }
-    )
-    vim.api.nvim_buf_set_keymap(
-        bufnr,
-        'n',
-        '<CR>',
-        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "load")<CR>', win_id),
-        { noremap = true, silent = true }
-    )
-    vim.api.nvim_buf_set_keymap(
-        bufnr,
-        'n',
-        'D',
-        string.format(':lua process_line(vim.api.nvim_get_current_line(), %d, "delete")<CR>', win_id),
-        { noremap = true, silent = true }
-    )
 end
 
 function M.create_float_win()
