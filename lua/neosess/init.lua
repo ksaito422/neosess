@@ -1,43 +1,14 @@
 local ui = require('neosess.ui')
-local session = require('neosess.session')
+local load_session = require('neosess.load_session')
+local save_session = require('neosess.save_session')
 
 local M = {}
 
 function M.setup(opts)
     -- Define default values
-    -- TODO: localで定義したい
-    session_path = opts.session_path or '~/.config/nvim/sessions'
+    local session_dir = opts.session_path or '~/.config/nvim/sessions'
     -- TODO: 空文字列, nilなどの不正な値ならエラーにしたい
-    session_path = vim.fn.expand(session_path)
-end
-
--- ディレクトリが存在しない場合、ディレクトリを作成する
-local function dir_exists()
-    local dir_exists = vim.loop.fs_stat(session_path)
-    if not dir_exists then
-        os.execute('mkdir -p ' .. session_path)
-    end
-end
-
--- ファイルが存在しない場合、ファイルを作成する
-local function file_exists(session_file_path)
-    local file_exists = vim.loop.fs_stat(session_file_path)
-    if not file_exists then
-        local f = assert(io.open(session_file_path, 'w'))
-        f:close()
-    end
-end
-
--- セッションを保存する
-function M.save_session(file)
-    local session_file_path = session_path .. '/' .. file .. '.vim'
-
-    dir_exists()
-    file_exists(session_file_path)
-
-    vim.api.nvim_command('mksession! ' .. session_file_path)
-    vim.api.nvim_command('redraw')
-    vim.api.nvim_echo({ { 'neosess: session created.' } }, true, {})
+    SessionPath = vim.fn.expand(session_dir)
 end
 
 -- 保存したセッションファイル一覧を取得する
@@ -73,5 +44,7 @@ function M.display_session_files()
     local res = fetch_session_file()
     show_table_in_float_win(res)
 end
+
+M.save_session = save_session.save
 
 return M
