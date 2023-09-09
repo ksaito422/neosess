@@ -7,7 +7,6 @@ local M = {}
 function M.setup(opts)
     -- Define default values
     local session_dir = opts.session_path or '~/.config/nvim/sessions'
-    -- TODO: 空文字列, nilなどの不正な値ならエラーにしたい
     SessionPath = vim.fn.expand(session_dir)
 end
 
