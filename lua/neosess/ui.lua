@@ -54,9 +54,9 @@ local function create_window()
         col = math.ceil((vim.o.columns - win_width) / 2),
         height = math.ceil(win_height),
         width = math.ceil(win_width),
-        title = 'Sessions',
-        border = 'single',
-        title_pos = 'center',
+        title = WindowConfig.title or 'Sessions',
+        border = WindowConfig.border or 'single',
+        title_pos = WindowConfig.title_ops or 'center',
     }
 
     local bufnr = vim.api.nvim_create_buf(false, true)

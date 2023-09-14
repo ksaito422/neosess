@@ -7,6 +7,7 @@ function M.setup(opts)
     -- Define default values
     local session_dir = opts.session_path or '~/.config/nvim/sessions'
     SessionPath = vim.fn.expand(session_dir)
+    WindowConfig = opts.window_config
 end
 
 M.display_session_files = load_session.display
