@@ -29,8 +29,7 @@ local function load_session(file, win_id)
     vim.api.nvim_command('source ' .. file)
 end
 
-local function delete_session(file, win_id)
-    vim.api.nvim_win_close(win_id, true)
+local function delete_session(file)
     os.remove(file)
     vim.api.nvim_echo({ { 'neosess: ' .. file .. ' has been deleted.' } }, true, {})
 end
@@ -40,7 +39,7 @@ function ProcessLine(line, win_id, mode)
     if mode == 'load' then
         load_session(line, win_id)
     elseif 'delete' then
-        delete_session(line, win_id)
+        delete_session(line)
     end
 end
 
