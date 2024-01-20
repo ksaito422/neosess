@@ -11,7 +11,9 @@ local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local previewers = require('telescope.previewers')
 
-local sessions = function(opts)
+local M = {}
+
+M.sessions = function(opts)
     opts = opts or {}
 
     local function fetch_session_files()
@@ -37,17 +39,23 @@ local sessions = function(opts)
         },
         sorter = conf.generic_sorter(opts),
         attach_mappings = function(prompt_bufnr, map)
-            -- <Enter>したときの挙動を変える
+            -- <Enter>でセッションに保存してあるファイルを開く
             actions.select_default:replace(function()
                 actions.close(prompt_bufnr)
                 local selection = action_state.get_selected_entry()
-                vim.api.nvim_put({ selection[1] }, '', false, true)
+                vim.api.nvim_command('source ' .. selection[1])
             end)
+
+            -- <ctrl-d>でセッションファイルを削除する
+            map('i', '<C-d>', function(_prompt_bufnr)
+                local selection = action_state.get_selected_entry()
+                os.remove(selection[1])
+                vim.api.nvim_echo({ { 'neosess: ' .. selection[1] .. ' has been deleted.' } }, true, {})
+            end)
+
             return true
         end,
     }):find()
 end
 
-
-
-sessions(require('telescope.themes').get_dropdown {})
+return M

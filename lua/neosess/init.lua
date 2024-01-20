@@ -1,5 +1,6 @@
-local load_session = require('neosess.load_session')
+-- local load_session = require('neosess.load_session')
 local save_session = require('neosess.save_session')
+local load_session = require('neosess.telescope')
 
 local M = {}
 
@@ -14,7 +15,8 @@ function M.setup(opts)
     }
 end
 
-M.display_session_files = load_session.display
+-- M.display_session_files = load_session.sessions(require('telescope.themes').get_dropdown {})
+M.display_session_files = load_session.sessions
 M.save_session = save_session.save
 
 return M
