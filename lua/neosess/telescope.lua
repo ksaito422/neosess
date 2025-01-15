@@ -47,7 +47,7 @@ M.sessions = function(opts)
             end)
 
             -- <ctrl-d>でセッションファイルを削除する
-            map('i', '<C-d>', function(_prompt_bufnr)
+            map('n', '<C-d>', function(_prompt_bufnr)
                 local selection = action_state.get_selected_entry()
                 os.remove(selection[1])
                 vim.api.nvim_echo({ { 'neosess: ' .. selection[1] .. ' has been deleted.' } }, true, {})
