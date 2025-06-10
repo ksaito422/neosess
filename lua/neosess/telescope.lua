@@ -7,8 +7,8 @@ end
 local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
 local conf = require('telescope.config').values
-local actions = require "telescope.actions"
-local action_state = require "telescope.actions.state"
+local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
 local previewers = require('telescope.previewers')
 
 local M = {}
@@ -46,12 +46,24 @@ M.sessions = function(opts)
                 vim.api.nvim_command('source ' .. selection[1])
             end)
 
-            -- <ctrl-d>でセッションファイルを削除する
-            map('n', '<C-d>', function(_prompt_bufnr)
+            -- <ctrl-;>でセッションファイルを削除する
+            local delete_session = function(prompt_bufnr)
                 local selection = action_state.get_selected_entry()
-                os.remove(selection[1])
-                vim.api.nvim_echo({ { 'neosess: ' .. selection[1] .. ' has been deleted.' } }, true, {})
-            end)
+                local filename = vim.fn.fnamemodify(selection[1], ':t')
+
+                -- 削除確認
+                local confirm = vim.fn.confirm('Delete session "' .. filename .. '"?', '&Yes\n&No', 2)
+                if confirm == 1 then
+                    os.remove(selection[1])
+                    vim.api.nvim_echo({ { 'neosess: ' .. filename .. ' has been deleted.' } }, true, {})
+
+                    -- 画面リフレッシュ
+                    actions.close(prompt_bufnr)
+                    M.sessions(opts)
+                end
+            end
+
+            map('n', '<C-;>', delete_session)
 
             return true
         end,
